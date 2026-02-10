@@ -71,7 +71,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       if (p.type === 'C') {
         cities.current.push({ id: `city-${cityIdx++}`, pos: { x: p.x, y: CANVAS_HEIGHT - 45 }, isDestroyed: false });
       } else {
-        // Updated ammo from 50 to 100 per battery
         let ammo = 100; 
         batteries.current.push({ id: `battery-${batteryIdx++}`, pos: { x: p.x, y: CANVAS_HEIGHT - 35 }, ammo, maxAmmo: ammo, isDestroyed: false });
       }
@@ -149,7 +148,7 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       m.pos.y = m.startPos.y + (m.targetPos.y - m.startPos.y) * m.progress;
       if (m.progress >= 1) {
         m.isExploding = true;
-        explosions.current.push({ id: Math.random().toString(36).substr(2, 9), pos: m.targetPos, radius: 0, maxRadius: EXPLOSION_MAX_RADIUS * 1.2, expanding: true, isFinished: false });
+        explosions.current.push({ id: Math.random().toString(36).substr(2, 9), pos: m.targetPos, radius: 0, maxRadius: EXPLOSION_MAX_RADIUS * 2.4, expanding: true, isFinished: false });
       }
     });
     playerMissiles.current = playerMissiles.current.filter(m => !m.isExploding);
@@ -160,7 +159,7 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       enemyMissiles.current.forEach(m => {
         if (Math.hypot(m.pos.x - ex.pos.x, m.pos.y - ex.pos.y) < ex.radius) {
           m.isDestroyed = true; setCurrentScore(s => s + 25);
-          explosions.current.push({ id: Math.random().toString(36).substr(2, 9), pos: m.pos, radius: 0, maxRadius: EXPLOSION_MAX_RADIUS * 0.9, expanding: true, isFinished: false });
+          explosions.current.push({ id: Math.random().toString(36).substr(2, 9), pos: m.pos, radius: 0, maxRadius: EXPLOSION_MAX_RADIUS * 1.8, expanding: true, isFinished: false });
         }
       });
     });
@@ -174,14 +173,12 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
   };
 
   const drawEnvironment = (ctx: CanvasRenderingContext2D) => {
-    // Space Background
     const bgGrad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
     bgGrad.addColorStop(0, '#000000');
     bgGrad.addColorStop(0.8, '#0a0a20');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Stars
     ctx.fillStyle = '#ffffff';
     for(let i=0; i<50; i++) {
         const x = (i * 137.5) % CANVAS_WIDTH;
@@ -192,7 +189,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
     }
     ctx.globalAlpha = 1.0;
 
-    // Distant Cyber City Silhouettes
     ctx.fillStyle = '#050510';
     const cityPoints = [0, 100, 180, 250, 400, 520, 600, 720, 800];
     const cityHeights = [20, 60, 40, 90, 30, 70, 50, 80, 20];
@@ -204,28 +200,23 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT - 60);
     ctx.fill();
 
-    // Ground / Horizon
     const groundHeight = 60;
     const horizonY = CANVAS_HEIGHT - groundHeight;
 
-    // Ground Surface
     const groundGrad = ctx.createLinearGradient(0, horizonY, 0, CANVAS_HEIGHT);
     groundGrad.addColorStop(0, '#101025');
     groundGrad.addColorStop(1, '#000000');
     ctx.fillStyle = groundGrad;
     ctx.fillRect(0, horizonY, CANVAS_WIDTH, groundHeight);
 
-    // Grid on Ground
     ctx.strokeStyle = '#00f2ff22';
     ctx.lineWidth = 1;
-    // Horizontal lines
     for(let i=0; i<=groundHeight; i+=15) {
         ctx.beginPath();
         ctx.moveTo(0, horizonY + i);
         ctx.lineTo(CANVAS_WIDTH, horizonY + i);
         ctx.stroke();
     }
-    // Vertical perspective lines
     for(let i=0; i<=CANVAS_WIDTH; i+=80) {
         ctx.beginPath();
         ctx.moveTo(i, horizonY);
@@ -233,7 +224,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
         ctx.stroke();
     }
 
-    // Glowing Horizon Line
     ctx.shadowBlur = 15;
     ctx.shadowColor = '#00f2ff';
     ctx.strokeStyle = '#00f2ff';
@@ -248,7 +238,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
   const draw = (ctx: CanvasRenderingContext2D) => {
     drawEnvironment(ctx);
 
-    // Scanlines effect
     ctx.fillStyle = 'rgba(18, 16, 16, 0.1)';
     for(let i = 0; i < CANVAS_HEIGHT; i += 4) {
       ctx.fillRect(0, i, CANVAS_WIDTH, 1);
@@ -256,12 +245,10 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
 
     cities.current.forEach(c => {
       if (c.isDestroyed) {
-          // Draw ruins
           ctx.fillStyle = '#1a1a1a';
           ctx.fillRect(c.pos.x - 12, c.pos.y + 5, 24, 10);
           return;
       }
-      // Futuristic City Modules
       ctx.fillStyle = '#00b894';
       ctx.beginPath();
       ctx.moveTo(c.pos.x - 15, c.pos.y + 15);
@@ -270,7 +257,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       ctx.lineTo(c.pos.x + 15, c.pos.y + 15);
       ctx.fill();
       
-      // Neon highlights
       ctx.fillStyle = '#55efc4';
       ctx.fillRect(c.pos.x - 4, c.pos.y - 15, 8, 15);
       ctx.shadowBlur = 10;
@@ -283,7 +269,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       const { pos, ammo, isDestroyed } = b;
       const time = Date.now();
       
-      // Base Platform
       ctx.fillStyle = '#1e272e';
       ctx.beginPath();
       ctx.moveTo(pos.x - 30, pos.y + 20);
@@ -292,7 +277,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       ctx.lineTo(pos.x + 30, pos.y + 20);
       ctx.fill();
       
-      // Platform trim
       ctx.strokeStyle = isDestroyed ? '#333' : '#00f2ff';
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -303,18 +287,15 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
           return;
       }
 
-      // Turret Head
       const angle = Math.atan2(lastMousePos.current.y - pos.y, lastMousePos.current.x - pos.x);
       ctx.save();
       ctx.translate(pos.x, pos.y - 5);
       ctx.rotate(angle);
 
-      // Barrels
       ctx.fillStyle = '#485460';
       ctx.fillRect(5, -8, 25, 6);
       ctx.fillRect(5, 2, 25, 6);
       
-      // Barrel glow
       if (ammo > 0) {
           const intensity = Math.abs(Math.sin(time / 200));
           ctx.fillStyle = `rgba(0, 242, 255, ${0.3 + intensity * 0.4})`;
@@ -322,19 +303,16 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
           ctx.fillRect(25, 3, 6, 4);
       }
 
-      // Rotating head body
       ctx.fillStyle = '#2f3542';
       ctx.beginPath();
       ctx.arc(0, 0, 15, 0, Math.PI * 2);
       ctx.fill();
       
-      // Head Detail
       ctx.strokeStyle = '#00f2ff44';
       ctx.beginPath(); ctx.arc(0,0, 10, 0, Math.PI); ctx.stroke();
 
       ctx.restore();
 
-      // UI Text for Battery
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 14px monospace';
       ctx.textAlign = 'center';
@@ -351,24 +329,30 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       trailGradient.addColorStop(0, 'rgba(255, 0, 0, 0)');
       trailGradient.addColorStop(1, 'rgba(255, 63, 52, 0.8)');
       
+      // Thickened enemy trail from 4 to 8
       ctx.strokeStyle = trailGradient;
-      ctx.lineWidth = 4; // Increased from 2 to 4
+      ctx.lineWidth = 8;
       ctx.beginPath(); ctx.moveTo(m.startPos.x, m.startPos.y); ctx.lineTo(m.pos.x, m.pos.y); ctx.stroke();
 
-      const glow = ctx.createRadialGradient(m.pos.x, m.pos.y, 0, m.pos.x, m.pos.y, 10 + pulse);
+      // Thickened enemy head radius from 10 to 20
+      const glow = ctx.createRadialGradient(m.pos.x, m.pos.y, 0, m.pos.x, m.pos.y, 20 + pulse);
       glow.addColorStop(0, '#ffffff');
       glow.addColorStop(0.2, '#ff3f34');
       glow.addColorStop(1, 'rgba(255, 0, 0, 0)');
       
       ctx.fillStyle = glow;
-      ctx.beginPath(); ctx.arc(m.pos.x, m.pos.y, 10 + pulse, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(m.pos.x, m.pos.y, 20 + pulse, 0, Math.PI * 2); ctx.fill();
     });
 
     playerMissiles.current.forEach(m => {
+      // Thickened player trail from 4 to 8
       ctx.strokeStyle = '#00f2ff'; 
-      ctx.lineWidth = 4; // Increased from 2 to 4
+      ctx.lineWidth = 8;
       ctx.beginPath(); ctx.moveTo(m.startPos.x, m.startPos.y); ctx.lineTo(m.pos.x, m.pos.y); ctx.stroke();
-      ctx.fillStyle = '#fff'; ctx.fillRect(m.pos.x - 3, m.pos.y - 3, 6, 6); // Slightly bigger head too
+      
+      // Thickened player head from 6x6 to 12x12
+      ctx.fillStyle = '#fff'; 
+      ctx.fillRect(m.pos.x - 6, m.pos.y - 6, 12, 12);
     });
 
     explosions.current.forEach(ex => {
