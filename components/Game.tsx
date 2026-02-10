@@ -71,7 +71,8 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
       if (p.type === 'C') {
         cities.current.push({ id: `city-${cityIdx++}`, pos: { x: p.x, y: CANVAS_HEIGHT - 45 }, isDestroyed: false });
       } else {
-        let ammo = 50; 
+        // Updated ammo from 50 to 100 per battery
+        let ammo = 100; 
         batteries.current.push({ id: `battery-${batteryIdx++}`, pos: { x: p.x, y: CANVAS_HEIGHT - 35 }, ammo, maxAmmo: ammo, isDestroyed: false });
       }
     });
@@ -423,10 +424,6 @@ const Game: React.FC<GameProps> = ({ score, onGameOver, onVictory }) => {
         <div className="p-3 bg-black/40 border-b-4 border-cyan-500 text-center backdrop-blur-md rounded-b-lg min-w-[140px]">
           <span className="text-cyan-400 text-[10px] font-bold uppercase tracking-widest block mb-1">ARSENAL / 弹药量</span>
           <span className={`text-white text-3xl font-black font-mono ${totalAmmo < 15 ? 'text-red-500 animate-pulse' : ''}`}>{totalAmmo}</span>
-        </div>
-        <div className="p-3 bg-black/40 border-r-4 border-cyan-500 text-right backdrop-blur-md rounded-l-lg">
-          <span className="text-cyan-400 text-[10px] font-bold uppercase tracking-widest block mb-1">SECTOR STATUS / 扇区状态</span>
-          <span className="text-emerald-400 text-2xl font-black font-mono">OPERATIONAL</span>
         </div>
       </div>
       <canvas

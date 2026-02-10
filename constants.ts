@@ -12,9 +12,6 @@ export const EXPLOSION_GROWTH_RATE = 1.2;
 export const CITY_COUNT = 6;
 export const BATTERY_COUNT = 3;
 
-export const INITIAL_AMMO_SIDE = 10;
-export const INITIAL_AMMO_CENTER = 15;
-
 export const COLORS = {
   BACKGROUND: '#000000',
   ENEMY: '#FF0000',

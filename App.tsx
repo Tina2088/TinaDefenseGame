@@ -36,7 +36,7 @@ const App: React.FC = () => {
         <div className="z-20 text-center space-y-6 p-8 bg-black/80 border-4 border-cyan-500 rounded-xl shadow-[0_0_20px_rgba(0,255,255,0.5)] max-w-[90vw] animate-in fade-in zoom-in duration-300">
           <div className="space-y-1">
             <h1 className="text-4xl md:text-6xl font-black text-cyan-400 tracking-tighter italic">TINA DEFENSE</h1>
-            <h2 className="text-xl md:text-2xl font-bold text-cyan-600 tracking-widest">战区拦截系统</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-cyan-600 tracking-widest">Tina新星防御</h2>
           </div>
           <div className="text-white text-sm md:text-lg max-w-md mx-auto opacity-80 leading-relaxed">
             <p>轨道打击即将降临。在敌方弹头撞击城市前，点击屏幕发射拦截导弹。达到 1000 分即可获得阶段性胜利。</p>
@@ -50,7 +50,7 @@ const App: React.FC = () => {
               <span className="text-xs opacity-80 font-normal">启动防御程序</span>
             </button>
             <div className="text-[10px] md:text-xs text-cyan-300/50 mt-4 uppercase tracking-widest text-center">
-              点击屏幕发射 • 无尽防御模式 • 1000分晋级
+              点击屏幕发射 • 无尽防御模式 • 1000分获胜
             </div>
           </div>
         </div>
